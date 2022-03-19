@@ -3,58 +3,34 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-
+use App\Http\Requests\LoginRequest;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\DTO\UserDTO;
+use App\Http\Resources\JSONAPIResource;
 class LoginController extends Controller
 {
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        if (!$request->email) {
+        $validated = UserDTO::fromRequest($request);
+
+        try {
+            $user = User::where('email', $validated->email)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
             return response()->json([
-                'status'  => 422,
-                'message' => 'email is required'
-            ]);
-        }
-        
-        if(strlen($request->email) < 6) {
-            return response()->json([
-                'status'  => 422,
-                'message' => 'email is invalid'
-            ]);
+                'message' => 'Model not found'
+            ],404);
         }
     
-        if (!$request->password) {
+        if (!Hash::check($validated->password, $user->password)) {
             return response()->json([
-                'status'  => 422,
-                'message' => 'password is required'
-            ]);
-        }
-        if(strlen($request->password) < 8) {
-            return response()->json([
-                'status'  => 422,
-                'message' => 'password is invalid'
-            ]);
-        }
-    
-        $user = User::where('email', $request->email)->first();
-        if (!$user) {
-            return response()->json([
-                'status'  => 404,
-                'message' => 'Model not found.'
-            ]);
-        }
-    
-        if (!Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'status'  => 404,
                 'message' => 'Invalid credentials'
-            ]);
+            ],404);
         }
-        
-        return response()->json([
-            'user' => $user,
-            'token' => $user->createToken('User-Token')->plainTextToken
-        ]);
+
+        return new JSONAPIResource($user);
     }
+
 }

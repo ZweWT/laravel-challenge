@@ -8,12 +8,10 @@ use Illuminate\Http\Request;
 
 class InternetServiceProviderController extends Controller
 {
-    public function getMptInvoiceAmount(Request $request)
+    public function getMptInvoiceAmount(Request $request, Mpt $mpt)
     {
-        $mpt = new Mpt();
-        $mpt->setMonth($request->get('month') ?: 1);
-        $amount = $mpt->calculateTotalAmount();
-        
+        $amount = $mpt->calculateTotalAmount($request->get('month') ?: 1);
+    
         return response()->json([
             'data' => $amount
         ]);

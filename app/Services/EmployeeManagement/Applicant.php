@@ -2,15 +2,12 @@
 
 namespace App\Services\EmployeeManagement;
 
-class Applicant implements Employee
+use App\Services\EmployeeManagement\Contracts\ApplicableInterface;
+
+class Applicant implements ApplicableInterface
 {
     public function applyJob(): bool
     {
         return true;
-    }
-    
-    public function salary()
-    {
-        // TODO: Implement salary() method.
     }
 }

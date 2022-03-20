@@ -21,13 +21,16 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [LoginController::class, 'login']);
 Route::post('mpt/invoice-amount', [InternetServiceProviderController::class, 'getMptInvoiceAmount']);
 Route::get('register', [LoginController::class, 'register']);
-Route::middleware('auth:sanctum')->group(function () {
+
+Route::post('mpt/invoice-amount', [InternetServiceProviderController::class, 'getMptInvoiceAmount']);
+Route::post('ooredoo/invoice-amount', [InternetServiceProviderController::class, 'getOoredooInvoiceAmount']);
+
+
+Route::middleware('auth:sanctum')->group(function () {  
     
     Route::get('posts', [PostController::class, 'list']);
     Route::post('posts/reaction', [PostController::class, 'toggleReaction']);
     
-    // Route::post('mpt/invoice-amount', [InternetServiceProviderController::class, 'getMptInvoiceAmount']);
-    Route::post('ooredoo/invoice-amount', [InternetServiceProviderController::class, 'getOoredooInvoiceAmount']);
     
     Route::post('job/apply', [JobController::class, 'apply']);
     

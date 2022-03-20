@@ -10,6 +10,7 @@ use App\Http\Requests\LoginRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\DTO\UserDTO;
 use App\Http\Resources\JSONAPIResource;
+
 class LoginController extends Controller
 {
     public function login(LoginRequest $request)
